@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário Diablo IV</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="CSS/style.css" />
+    <style>
+        body {
+            font-size: 16px;
+            /* Definição do tamanho base da fonte */
+        }
+
+        .rule {
+            color: var(--vermelhoescuro);
+        }
+
+        .rule.valid {
+            color: var(--verde);
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .invert {
+            filter: invert(1);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 10px;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .button-container button {
+            padding: 5px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--preto);
+            color: var(--branco);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            /* Alterado para rem */
+        }
+
+        #charCount {
+            margin-top: 10px;
+        }
+
+        #warning {
+            color: var(--vermelhoescuro);
+            font-weight: bold;
+        }
+
+        #validationMessage {
+            color: var(--vermelhoescuro);
+            font-weight: bold;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            /* Alterado para rem */
+            padding: 18px 0;
+        }
+
+        main h2 {
+            font-size: 1.875rem;
+            /* Alterado para rem */
+        }
+
+        main p {
+            font-size: 1.25rem;
+            /* Alterado para rem */
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="button-container">
+            <button id="invertButton">I</button>
+            <button id="increaseButton">A+</button>
+            <button id="decreaseButton">A-</button>
+        </div>
+        <h1>DIABLO IV</h1>
+        <nav>
+            <ul>
+                <li style="display: inline-block;"><a href="index.html">Página Inicial</a></li> |
+                <li style="display: inline-block;"><a href="galeria.html">Imagens</a></li> |
+                <li style="display: inline-block;"><a href="galeria2.html" rel="prev">Vídeos</a></li> |
+                <li style="display: inline-block;"><a href="formulario.html">Formulário</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Formulário de inscrição</h2>
+        <br />
+        <p>Cadastre e-mail em nosso formulário para receber mais informações do nosso jogo e se tornar um novo néfalem!
+        </p>
+        <br /><br />
+
+        <div class="formulario">
+            <form id="cadastroForm">
+                <fieldset>
+                    <br />
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required class="input" />
+
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" name="senha" required class="input" />
+                    <ul style="font-size: 18px;">
+                        <li id="ruleLength" class="rule">Pelo menos 8 caracteres</li>
+                        <li id="ruleUppercase" class="rule">Pelo menos uma letra maiúscula</li>
+                        <li id="ruleLowercase" class="rule">Pelo menos uma letra minúscula</li>
+                        <li id="ruleNumber" class="rule">Pelo menos um número</li>
+                        <li id="ruleSpecial" class="rule">Pelo menos um caractere especial (!@#$%^&*)</li>
+                    </ul>
+
+                    <label for="confirmarSenha">Digite a senha novamente:</label>
+                    <input type="password" id="confirmarSenha" name="confirmarSenha" required class="input" />
+                    <div id="passwordMatch" class="hidden">As senhas coincidem!</div>
+
+                    <label for="idade">Idade:</label>
+                    <input type="number" id="idade" name="idade" required class="input" />
+
+                    <label for="estado">Estado:</label>
+                    <select id="estado" name="estado" required class="input">
+                        <option value="">Selecione</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="ES">Espírito Santo</option>
+                    </select>
+
+                    <label for="cidade">Cidade:</label>
+                    <select id="cidade" name="cidade" disabled required class="input">
+                        <option value="">Selecione</option>
+                    </select>
+                    <br /><br />
+
+                    <label for="mensagem">Deixe suas dúvidas e/ou sugestões:</label>
+                    <textarea id="mensagem" name="mensagem" rows="6" cols="70" maxlength="200" class="input"></textarea>
+                    <div id="charCount">Caracteres digitados: 0</div>
+                    <div id="warning" style="display: none;">Você atingiu o limite máximo de caracteres!</div>
+                    <br />
+
+                    <button type="submit" style="padding: 10px; font-size: 20px;">Enviar</button>
+                    <div id="validationMessage"></div>
+                    <br />
+                </fieldset>
+            </form>
+        </div>
+    </main>
+
+    <footer style="padding: 40px 0;">
+        <p><strong>Copyright &copy; 2024 Diablo IV. Todos os direitos reservados.</strong></p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('cadastroForm');
+        const senhaInput = document.getElementById('senha');
+        const confirmarSenhaInput = document.getElementById('confirmarSenha');
+        const idadeInput = document.getElementById('idade');
+        const estadoSelect = document.getElementById('estado');
+        const cidadeSelect = document.getElementById('cidade');
+        const mensagemTextarea = document.getElementById('mensagem');
+        const charCount = document.getElementById('charCount');
+        const warning = document.getElementById('warning');
+        const passwordMatch = document.getElementById('passwordMatch');
+        const invertButton = document.getElementById('invertButton');
+        const increaseButton = document.getElementById('increaseButton');
+        const decreaseButton = document.getElementById('decreaseButton');
+        const validationMessage = document.getElementById('validationMessage');
+        const body = document.body;
+
+        const minFontSize = 10; // Tamanho mínimo da fonte em pixels
+        const maxFontSize = 30; // Tamanho máximo da fonte em pixels
+        const step = 2; // Incremento/decremento do tamanho da fonte em pixels
+
+        mensagemTextarea.addEventListener('input', () => {
+            const currentLength = mensagemTextarea.value.length;
+            charCount.textContent = `Caracteres digitados: ${currentLength}`;
+
+            if (currentLength >= mensagemTextarea.maxLength) {
+                warning.style.display = 'block';
+            } else {
+                warning.style.display = 'none';
+            }
+        });
+
+        senhaInput.addEventListener('input', validarSenha);
+        confirmarSenhaInput.addEventListener('input', validarRepeticaoSenha);
+
+        increaseButton.addEventListener('click', () => {
+            let currentFontSize = parseFloat(window.getComputedStyle(body, null).getPropertyValue('font-size'));
+            if (currentFontSize < maxFontSize) {
+                body.style.fontSize = `${currentFontSize + step}px`;
+            }
+        });
+
+        decreaseButton.addEventListener('click', () => {
+            let currentFontSize = parseFloat(window.getComputedStyle(body, null).getPropertyValue('font-size'));
+            if (currentFontSize > minFontSize) {
+                body.style.fontSize = `${currentFontSize - step}px`;
+            }
+        });
+
+        invertButton.addEventListener('click', () => {
+            body.classList.toggle('invert');
+        });
+
+        function validarSenha() {
+            const value = senhaInput.value;
+            let validCount = 0;
+
+            // Verifica o comprimento da senha
+            if (value.length >= 8) {
+                document.getElementById('ruleLength').classList.add('valid');
+                validCount++;
+            } else {
+                document.getElementById('ruleLength').classList.remove('valid');
+            }
+
+            // Verifica se contém letra maiúscula
+            if (/[A-Z]/.test(value)) {
+                document.getElementById('ruleUppercase').classList.add('valid');
+                validCount++;
+            } else {
+                document.getElementById('ruleUppercase').classList.remove('valid');
+            }
+
+            // Verifica se contém letra minúscula
+            if (/[a-z]/.test(value)) {
+                document.getElementById('ruleLowercase').classList.add('valid');
+                validCount++;
+            } else {
+                document.getElementById('ruleLowercase').classList.remove('valid');
+            }
+
+            // Verifica se contém número
+            if (/\d/.test(value)) {
+                document.getElementById('ruleNumber').classList.add('valid');
+                validCount++;
+            } else {
+                document.getElementById('ruleNumber').classList.remove('valid');
+            }
+
+            // Verifica se contém caractere especial
+            if (/[\W_]/.test(value)) {
+                document.getElementById('ruleSpecial').classList.add('valid');
+                validCount++;
+            } else {
+                document.getElementById('ruleSpecial').classList.remove('valid');
+            }
+
+            if (validCount === 5) {
+                validationMessage.textContent = "Senha válida";
+                validationMessage.style.color = "green";
+                return true;
+            } else {
+                validationMessage.textContent = "Senha inválida";
+                validationMessage.style.color = "red";
+                return false;
+            }
+        }
+
+        function validarRepeticaoSenha() {
+            if (senhaInput.value === confirmarSenhaInput.value) {
+                passwordMatch.classList.remove('hidden');
+                return true;
+            } else {
+                passwordMatch.classList.add('hidden');
+                return false;
+            }
+        }
+
+        function validarFormulario() {
+            let isValid = true;
+
+            // Valida a senha
+            if (!validarSenha()) {
+                isValid = false;
+            }
+
+            // Valida a repetição da senha
+            if (!validarRepeticaoSenha()) {
+                validationMessage.textContent = 'As senhas não coincidem.';
+                validationMessage.style.color = "red";
+                isValid = false;
+            }
+
+            // Valida a idade
+            if (!validarIdade()) {
+                validationMessage.textContent = 'Você deve ter no mínimo 18 anos para se cadastrar.';
+                validationMessage.style.color = "red";
+                isValid = false;
+            }
+
+            if (isValid) {
+                window.alert("Formulário enviado com sucesso!");
+                validationMessage.style.color = "green";
+            }
+
+            return isValid;
+        }
+
+        function validarIdade() {
+            return parseInt(idadeInput.value) >= 18;
+        }
+
+        estadoSelect.addEventListener('change', atualizarCidades);
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            if (validarFormulario()) {
+                // Se todas as validações forem atendidas, o formulário pode ser enviado
+                form.submit();
+            }
+        });
+
+        function atualizarCidades() {
+            const cidades = {
+                SP: ["São Paulo", "Campinas", "Santos"],
+                RJ: ["Rio de Janeiro", "Niterói", "Petrópolis"],
+                MG: ["Belo Horizonte", "Uberlândia", "Ouro Preto"],
+                ES: ["Vitória", "Vila Velha", "Guarapari"]
+            };
+
+            const estado = estadoSelect.value;
+            cidadeSelect.innerHTML = '<option value="">Selecione</option>';
+
+            if (estado) {
+                cidades[estado].forEach(cidade => {
+                    const option = document.createElement('option');
+                    option.value = cidade;
+                    option.textContent = cidade;
+                    cidadeSelect.appendChild(option);
+                });
+                cidadeSelect.disabled = false;
+            } else {
+                cidadeSelect.disabled = true;
+            }
+        }
+    </script>
+</body>
+
+</html>
